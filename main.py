@@ -400,7 +400,7 @@ for url in url_list:
 
     # Descripción
     try:
-        descripcion_element = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='block-gavias-lozin-content']/div/article/div[1]/div[2]/div[1]/div[5]/div[2]")))
+        descripcion_element = wait.until(EC.presence_of_element_located((By.XPATH, "//*[@id='block-gavias-lozin-content']/div/article/div[1]/div[1]/div[1]/div[5]/div[2]")))
         descripcion_text = descripcion_element.text.replace("Descripción", "")
     except:
         descripcion_text = 'N/A'
@@ -419,19 +419,66 @@ for url in url_list:
     except:
         image_source = 'N/A'
 
-    # imagen 2
-    try:
-        photo_element = wait.until(
-            EC.presence_of_element_located((By.XPATH, "//*[@id='sync2']/div[1]/div/div[1]/img")))
-        images_sources = photo_element.get_attribute("src")
-    except:
-        images_sources = 'N/A'
 
-    images_sources_json = json.dumps({"src": images_sources})
+    # # imagen 1
+    # try:
+    #     photo_element = wait.until(
+    #         EC.presence_of_element_located((By.XPATH, "//*[@id='sync2']/div[1]/div/div[1]/img")))
+    #     images_sources = photo_element.get_attribute("src")
+    # except:
+    #     images_sources = 'N/A'
+    #
+    # # imagen 2
+    # try:
+    #     photo_element = wait.until(
+    #         EC.presence_of_element_located((By.XPATH, "//*[@id='sync2']/div[1]/div/div[2]/img")))
+    #     images_sources = photo_element.get_attribute("src")
+    # except:
+    #     images_sources = 'N/A'
+    #
+    # # imagen 3
+    # try:
+    #     photo_element = wait.until(
+    #         EC.presence_of_element_located((By.XPATH, "//*[@id='sync2']/div[1]/div/div[3]/img")))
+    #     images_sources = photo_element.get_attribute("src")
+    # except:
+    #     images_sources = 'N/A'
+    #
+    # # imagen 4
+    # try:
+    #     photo_element = wait.until(
+    #         EC.presence_of_element_located((By.XPATH, "//*[@id='sync2']/div[1]/div/div[4]/img")))
+    #     images_sources = photo_element.get_attribute("src")
+    # except:
+    #     images_sources = 'N/A'
+    #
+    # images_sources_json = json.dumps({"src": images_sources})
+
+    # Lista de XPATHs de las imágenes
+    img_xpath_list = ["//*[@id='sync2']/div[1]/div/div[1]/img",
+                      "//*[@id='sync2']/div[1]/div/div[2]/img",
+                      "//*[@id='sync2']/div[1]/div/div[3]/img",
+                      "//*[@id='sync2']/div[1]/div/div[4]/img"]
+
+    # Lista para almacenar los URLs de las imágenes
+    img_urls_list = []
+
+    # Revisamos cada XPATH y añadimos la URL específica al diccionario de la imagen correspondiente
+    for xpath in img_xpath_list:
+        try:
+            photo_element = wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
+            img_urls_list.append({"src": photo_element.get_attribute("src")})
+        except:
+            img_urls_list.append({"src": "N/A"})
+
+    # Convertimos la lista de resultados en formato JSON
+    images_sources_json = json.dumps(img_urls_list)
+
+
 
     # Imprime todos los valores por consola
     try:
-        print(f'ciudad: {desired_word}, referencia: {referencia_text}, title: {title_text}, direccion: {direccion_text} description: {descripcion_text}, metros: {metros_text},  price: {price_text},img: {image_source}, img2: {images_sources}, provincia: {desired_word_3}')
+        print(f'ciudad: {desired_word}, referencia: {referencia_text}, title: {title_text}, direccion: {direccion_text} description: {descripcion_text}, metros: {metros_text},  price: {price_text},img: {image_source}, img2: {images_sources_json}, provincia: {desired_word_3}')
     except BrokenPipeError:
         print("Error al escribir en el pipe")
 
